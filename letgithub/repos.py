@@ -1,8 +1,7 @@
-from core import config 
-
+from config import config
 
 def display_repos(username: str, repo_name: str=None, *arg):
-    gh = config.get('github')
+    gh = config.get('GITHUB')
     if repo_name:
         attrs = [
             'name',

@@ -1,16 +1,20 @@
 import sys
+import os
+
 import utils
 import repos
 import users
-from core import config
+import issues
+from config import config, load_config
 
 
 COMMANDS = {
-    'whois': users.get_user,
-    'whoami': users.get_user,
+    'whois': users.show_user,
+    'whoami': users.show_user,
     'login': users.login,
     'repos': repos.display_repos,
     'issue': None,
+    'mi': issues.my_issues,
     'c': utils.clear_screen,
     'q': utils.quit
 }
@@ -18,20 +22,24 @@ COMMANDS = {
 EXIT_SUCCESS = 0
 EXIT_FAILED = -1
 
-if __name__ == '__main__':
+def main():
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    default_conf_file = os.path.join(current_dir, 'config.json')
+    load_config(default_conf_file)
+    users.authenticate_user()
     while True:
         try:
-            data = input(config.get('promt_msg')).strip()
+            data = input(config.get('PROMT_MSG')).strip()
         except EOFError:
             print()
             continue
         except KeyboardInterrupt:
-            sys.exit('\nGoodby, see you!')
+            sys.exit('\nGoodbye, see you. :)')
         except Exception:
             continue
 
         if data == 'q':
-            utils.quit('Bye, see you!', EXIT_SUCCESS)
+            utils.quit('Bye, see you. :)', EXIT_SUCCESS)
 
         try:
             args = data.split()
@@ -39,12 +47,13 @@ if __name__ == '__main__':
             COMMANDS[cmd](*args[1:])
         except (KeyError, ValueError):
             print('Command `{}` not found!'.format(data))
-        except IndexError:
-            pass
-        except KeyboardInterrupt:
+        except (IndexError, KeyboardInterrupt):
             pass
         except TypeError:
             print('Sorry, I can\'t understand.')
         except Exception as err:
             print(err)
+
+if __name__ == '__main__':
+    main()
 
