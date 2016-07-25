@@ -1,5 +1,6 @@
 import sys
 import os
+import readline
 
 import utils
 import repos
@@ -13,7 +14,7 @@ COMMANDS = {
     'whoami': users.show_user,
     'login': users.login,
     'repos': repos.display_repos,
-    'issue': None,
+    'issue': issues.view_issue,
     'mi': issues.my_issues,
     'c': utils.clear_screen,
     'q': utils.quit
