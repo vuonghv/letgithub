@@ -3,10 +3,15 @@ import requests
 import json
 from getpass import getpass
 
+from github import Github, UnknownObjectException
 from config import config
-from github import Github
+from utils import perr
+from colors import red, color
 
 GITHUB_API = 'https://api.github.com'
+
+def _color_field(field_name, value):
+    return color(config['THEME']['USER'][field_name])(value)
 
 def authenticate_user():
     token_file = os.path.expanduser('~/.letgithub/token.txt')
@@ -50,28 +55,37 @@ def login(username: str, *arg, **kwagrs):
 
 def show_user(username: str=None, *args, **kwagrs):
     g = config.get('GITHUB')
-    if username:
-        user = g.get_user(username)
-    else:
-        user = g.get_user()
-    attrs = [
-        'login',
-        'name',
-        'email',
-        'company',
-        'blog',
-        'bio',
-        'public_repos',
-        'public_gists',
-        'followers',
-        'following',
-        'created_at',
-        'updated_at',
-    ]
     try:
+        user = g.get_user(username) if username else g.get_user()
+        attrs = [
+            'login',
+            'name',
+            'email',
+            'company',
+            'blog',
+            'bio',
+            'public_repos',
+            'public_gists',
+            'followers',
+            'following',
+            'created_at',
+            'updated_at',
+        ]
         for attr in attrs:
             val = getattr(user, attr, None)
             print('  {}: {}'.format(attr, val if val is not None else ''))
-    except Exception:
-        print('user `{}` not found!'.format(username))
+        login = _color_field('login', user.login)
+        name = _color_field('name', user.name)
+        email = _color_field('email', '{} {}'.format(u'\U00002709', user.email))
+        company = _color_field('company', '{} {}'.format(u'\U0001F3E2', user.company))
+        blog = _color_field('blog', '{} {}'.format(u'\U0001F30E', user.blog))
+        location = _color_field('location', '{} {}'.format(u'\U0001F3E0', user.location))
+        bio = _color_field('bio', user.bio)
+        public_repos = _color_field('public_repos', '{} repositories'.format(user.public_repos))
+        public_gists = _color_field('public_gists', '{} gists'.format(user.public_gists))
+        followers = _color_field('followers', '{} followers'.format(user.followers))
+        following = _color_field('following', '{} following'.format(user.following))
+        joined_at = _color_field('created', 'joined at {}'.format(user.created_at))
+    except UnknownObjectException:
+        perr(red('user `{}` not found!'.format(username)))
 

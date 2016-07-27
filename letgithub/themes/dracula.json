@@ -1,5 +1,19 @@
 {
     "PROMT": 72,
+    "USER": {
+        "login": 178,
+        "name": 106,
+        "company": 221,
+        "blog": 242,
+        "location": 211,
+        "email": 151,
+        "bio": 114,
+        "public_repos": 113,
+        "public_gists": 223,
+        "followers": 119,
+        "following": 167,
+        "created": 198
+    },
     "ISSUE": {
         "number": 178,
         "state_open": 118,
