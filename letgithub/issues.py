@@ -101,6 +101,11 @@ def view_list_issues(username: str, repos: str):
             number = color_field('number', '#{}'.format(issue.number))
             created = color_field('created', issue.created_at)
             user = color_field('user', issue.user.login)
+            if issue.assignee:
+                assignee = '{} {}'.format(u'\U0001F647', issue.assignee.login)
+                assignee = color_field('assignee', assignee)
+            else:
+                assignee = ''
 
             list_labels = []
             for l in issue.labels:
@@ -110,11 +115,12 @@ def view_list_issues(username: str, repos: str):
                 list_labels.append(label)
             labels = ' '.join(list_labels)
 
-            formatter = ('{state} {title} {labels}  {comments}\n'
+            formatter = ('{state} {title} {labels}  {assignee}  {comments}\n'
                         '  {number} opened {created} by {user}')
             info = formatter.format(state=state, title=title, labels=labels,
                                     comments=comments, number=number,
-                                    created=created, user=user)
+                                    created=created, user=user,
+                                    assignee=assignee)
             print(info, '\n')
     except KeyError as err:
         print(err)
