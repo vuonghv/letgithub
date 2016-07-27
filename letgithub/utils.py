@@ -10,7 +10,7 @@ def quit(msg: str, status: int):
 def clear_screen(*args, **kwagrs):
     os.system('cls' if os.name == 'nt' else 'clear')
 
-def err(msg: str):
+def perr(msg: str):
     print(msg, file=sys.stderr)
 
 def align_text(text: str, left_margin: int=4, max_width: int=80):

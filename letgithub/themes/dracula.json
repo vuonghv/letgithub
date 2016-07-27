@@ -1,0 +1,20 @@
+{
+    "PROMT": 72,
+    "ISSUE": {
+        "number": 178,
+        "state_open": 118,
+        "state_closed": 1,
+        "title": 70,
+        "comments": 106,
+        "body": 221,
+        "user": 151,
+        "assignee": 114,
+        "created": 242,
+        "repos": 242
+    },
+    "COMMENT": {
+        "user": 136,
+        "updated": 242,
+        "body": 144
+    }
+}

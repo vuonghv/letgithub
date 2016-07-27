@@ -7,6 +7,7 @@ import repos
 import users
 import issues
 from config import config, load_config
+from colors import cyan, magenta, red, yellow, color
 
 
 COMMANDS = {
@@ -26,34 +27,39 @@ EXIT_FAILED = -1
 def main():
     current_dir = os.path.dirname(os.path.abspath(__file__))
     default_conf_file = os.path.join(current_dir, 'config.json')
-    load_config(default_conf_file)
+    theme_file = os.path.join(current_dir, 'themes', 'dracula.json')
+    obj = load_config(default_conf_file)
+    config.update(obj)
+    theme = load_config(theme_file)
+    config.update({'THEME': theme})
     users.authenticate_user()
     while True:
         try:
-            data = input(config.get('PROMT_MSG')).strip()
+            promt = color(config['THEME']['PROMT'])(config['PROMT_MSG'])
+            data = input(promt).strip()
         except EOFError:
             print()
             continue
         except KeyboardInterrupt:
-            sys.exit('\nGoodbye, see you. :)')
+            sys.exit(yellow('\nGoodbye, see you. :)'))
         except Exception:
             continue
 
         if data == 'q':
-            utils.quit('Bye, see you. :)', EXIT_SUCCESS)
+            utils.quit(yellow('Bye, see you. :)'), EXIT_SUCCESS)
 
         try:
             args = data.split()
             cmd = args[0]
             COMMANDS[cmd](*args[1:])
         except (KeyError, ValueError):
-            print('Command `{}` not found!'.format(data))
+            print(red('Command `{}` not found!'.format(data)))
         except (IndexError, KeyboardInterrupt):
             pass
         except TypeError:
-            print('Sorry, I can\'t understand.')
+            print(red('Sorry, I can\'t understand.'))
         except Exception as err:
-            print(err)
+            utils.perr(red(err))
 
 if __name__ == '__main__':
     main()

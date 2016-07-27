@@ -1,12 +1,14 @@
-from github import Github
 import json
+
+from github import Github
+from utils import perr
 
 config = {}
 
-def load_config(filename: str=None):
+def load_config(filename: str):
     try:
         with open(filename, 'r') as f:
-            config.update(json.load(f))
-    except FileNotFoundError as err:
-        print(err)
+            return json.load(f)
+    except FileNotFoundError as e:
+        perr(e)
 

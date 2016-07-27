@@ -1,11 +1,48 @@
-from config import config
 from github import UnknownObjectException
+from config import config as c
+from colors import color, default, color_256, get_contrast
+from colortrans import rgb2short
 
+
+def color_field(field_name, value):
+    return color(c['THEME']['ISSUE'][field_name])(value)
 
 def my_issues(*args, **kwagrs):
-    g = config.get('GITHUB')
+    g = c.get('GITHUB')
     for issue in g.get_user().get_issues():
-        print('{} ({}): {}'.format(issue.number, issue.state, issue.title))
+        state_icon = u'\U0001F3C3'
+        if issue.state == 'open':
+            state = color_field('state_open', state_icon)
+        elif issue.state == 'closed':
+            state = color_field('state_closed', state_icon)
+        else:
+            state = default(state_icon)
+
+        repos = color_field('repos', issue.repository.full_name)
+        title = color_field('title', issue.title)
+        if int(issue.comments) > 0:
+            comments = color_field('comments',
+                                '{} {}'.format(u'\U0001F4AC', issue.comments))
+        else:
+            comments = ''
+        number = color_field('number', '#{}'.format(issue.number))
+        created = color_field('created', issue.created_at)
+        user = color_field('user', issue.user.login)
+
+        list_labels = []
+        for l in issue.labels:
+            term_color = rgb2short(l.color)[0]
+            text_color = get_contrast(l.color)
+            label = color_256(term_color, bg=True)(text_color(l.name))
+            list_labels.append(label)
+        labels = ' '.join(list_labels)
+
+        formatter = ('{state} {repos} {title} {labels}  {comments}\n'
+                    '  {number} opened {created} by {user}')
+        info = formatter.format(state=state, repos=repos, title=title,
+                                comments=comments, number=number,
+                                created=created, user=user, labels=labels)
+        print(info, '\n')
 
 def view_issue(data: str, *args, **kwargs):
     try:
@@ -19,7 +56,7 @@ def view_issue(data: str, *args, **kwargs):
 
 def view_detail_issue(username: str, repos: str, number: int):
     try:
-        g = config.get('GITHUB')
+        g = c.get('GITHUB')
         issue = g.get_user(username).get_repo(repos).get_issue(number)
         print('#{number} ({state}) {title} {comments} comments'.format(
               number=issue.number,
@@ -43,13 +80,41 @@ def view_detail_issue(username: str, repos: str, number: int):
 
 def view_list_issues(username: str, repos: str):
     try:
-        g = config.get('GITHUB')
+        g = c.get('GITHUB')
         issues = g.get_user(username).get_repo(repos).get_issues()
-        for i in issues:
-            print('#{number} ({state}) {title}'.format(
-                  number=i.number, state=i.state, title=i.title))
-            print('-- {created}\t{comments} comments'.format(
-                  created=i.created_at, comments=i.comments))
+        for issue in issues:
+            state_icon = u'\U0001F3C3'
+            if issue.state == 'open':
+                state = color_field('state_open', state_icon)
+            elif issue.state == 'closed':
+                state = color_field('state_closed', state_icon)
+            else:
+                state = default(state_icon)
+
+            title = color_field('title', issue.title)
+            if int(issue.comments) > 0:
+                comments = color_field('comments',
+                                    '{} {}'.format(u'\U0001F4AC', issue.comments))
+            else:
+                comments = ''
+            number = color_field('number', '#{}'.format(issue.number))
+            created = color_field('created', issue.created_at)
+            user = color_field('user', issue.user.login)
+
+            list_labels = []
+            for l in issue.labels:
+                term_color = rgb2short(l.color)[0]
+                text_color = get_contrast(l.color)
+                label = color_256(term_color, bg=True)(text_color(l.name))
+                list_labels.append(label)
+            labels = ' '.join(list_labels)
+
+            formatter = ('{state} {title} {labels}  {comments}\n'
+                        '  {number} opened {created} by {user}')
+            info = formatter.format(state=state, title=title, labels=labels,
+                                    comments=comments, number=number,
+                                    created=created, user=user)
+            print(info, '\n')
     except KeyError as err:
         print(err)
     except UnknownObjectException:
