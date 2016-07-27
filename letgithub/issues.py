@@ -1,5 +1,6 @@
 from github import UnknownObjectException
 from config import config as c
+from utils import perr
 from colors import color, default, color_256, get_contrast
 from colortrans import rgb2short
 
@@ -69,14 +70,14 @@ def view_detail_issue(username: str, repos: str, number: int):
         print('--- {body}'.format(body=issue.body))
 
         print('{}comments{}'.format('_'*8, '_'*8))
-        for c in issue.get_comments():
+        for cmt in issue.get_comments():
             print('{user} {updated}'.format(
-                  user=c.user.login, updated=c.updated_at))
-            print('\t{body}'.format(body=c.body))
+                  user=cmt.user.login, updated=cmt.updated_at))
+            print('\t{body}'.format(body=cmt.body))
     except KeyError as err:
-        print(err)
+        perr(err)
     except UnknownObjectException:
-        print('Issue {}/{}/{} not found!'.format(username, repos, number))
+        perr('Issue {}/{}/{} not found!'.format(username, repos, number))
 
 def view_list_issues(username: str, repos: str):
     try:
