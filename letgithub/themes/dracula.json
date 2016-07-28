@@ -30,5 +30,13 @@
         "user": 136,
         "updated": 242,
         "body": 144
+    },
+    "REPOS": {
+        "name": 112,
+        "description": 172,
+        "stargazers_count": 203,
+        "forks_count": 111,
+        "updated_at": 149,
+        "parent": 100
     }
 }

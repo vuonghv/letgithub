@@ -38,9 +38,9 @@ def my_issues(*args, **kwagrs):
             list_labels.append(label)
         labels = ' '.join(list_labels)
 
-        formatter = ('{state} {repos} {title} {labels}  {comments}\n'
+        template = ('{state} {repos} {title} {labels}  {comments}\n'
                     '  {number} opened {created} by {user}')
-        info = formatter.format(state=state, repos=repos, title=title,
+        info = template.format(state=state, repos=repos, title=title,
                                 comments=comments, number=number,
                                 created=created, user=user, labels=labels)
         print(info, '\n')
@@ -115,9 +115,9 @@ def view_list_issues(username: str, repos: str):
                 list_labels.append(label)
             labels = ' '.join(list_labels)
 
-            formatter = ('{state} {title} {labels}  {assignee}  {comments}\n'
+            template = ('{state} {title} {labels}  {assignee}  {comments}\n'
                         '  {number} opened {created} by {user}')
-            info = formatter.format(state=state, title=title, labels=labels,
+            info = template.format(state=state, title=title, labels=labels,
                                     comments=comments, number=number,
                                     created=created, user=user,
                                     assignee=assignee)

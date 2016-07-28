@@ -14,7 +14,7 @@ COMMANDS = {
     'whois': users.show_user,
     'whoami': users.show_user,
     'login': users.login,
-    'repos': repos.display_repos,
+    'repos': repos.view_repos,
     'issue': issues.view_issue,
     'mi': issues.my_issues,
     'c': utils.clear_screen,
@@ -58,6 +58,8 @@ def main():
             pass
         except TypeError:
             print(red('Sorry, I can\'t understand.'))
+        except NotImplementedError:
+            utils.perr(red('command hasn\'t implemented yet!'))
         except Exception as err:
             utils.perr(red(err))
 

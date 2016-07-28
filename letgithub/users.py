@@ -70,15 +70,15 @@ def show_user(username: str=None, *args, **kwagrs):
         following = _color_field('following', '{} following'.format(user.following))
         joined_at = _color_field('created', 'joined at {}'.format(user.created_at))
 
-        formatter = ('{login} ({name})\n'
-                     '{email}\n'
-                     '{company}  {location}\n'
-                     '{blog}\n'
-                     '{bio}\n'
-                     '{public_repos}  {public_gists}\n'
-                     '{followers}  {following}\n'
-                     '{joined_at}')
-        info = formatter.format(login=login, name=name, email=email,
+        template = ('{login} ({name})\n'
+                    '{email}\n'
+                    '{company}  {location}\n'
+                    '{blog}\n'
+                    '{bio}\n'
+                    '{public_repos}  {public_gists}\n'
+                    '{followers}  {following}\n'
+                    '{joined_at}')
+        info = template.format(login=login, name=name, email=email,
                                 company=company, location=location,
                                 blog=blog, bio=bio, public_repos=public_repos,
                                 public_gists=public_gists, followers=followers,
