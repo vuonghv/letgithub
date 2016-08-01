@@ -7,6 +7,7 @@ from github import Github, UnknownObjectException
 from config import config
 from utils import perr, align_text
 from colors import red, color
+import emoji
 
 GITHUB_API = 'https://api.github.com'
 
@@ -57,7 +58,7 @@ def show_user(username: str=None, *args, **kwagrs):
     g = config.get('GITHUB')
     try:
         user = g.get_user(username) if username else g.get_user()
-        login = _color_field('login', '{} {}'.format(u'\U0001F608', user.login))
+        login = _color_field('login', ':smiling_imp: {}'.format(user.login))
         name = _color_field('name', user.name)
         email = _color_field('email', 'Email: {}'.format(user.email))
         company = _color_field('company', 'Company: {}'.format(user.company))
@@ -84,7 +85,7 @@ def show_user(username: str=None, *args, **kwagrs):
                                 public_gists=public_gists, followers=followers,
                                 following=following, joined_at=joined_at)
         info = align_text(info, left_margin=2, max_width=100)
-        print(info)
+        print(emoji.emojize(info))
     except UnknownObjectException:
         perr(red('user `{}` not found!'.format(username)))
 

@@ -3,6 +3,7 @@ from config import config as c
 from utils import perr
 from colors import color, default, color_256, get_contrast
 from colortrans import rgb2short
+import emoji
 
 
 def color_field(field_name, value):
@@ -11,7 +12,7 @@ def color_field(field_name, value):
 def my_issues(*args, **kwagrs):
     g = c.get('GITHUB')
     for issue in g.get_user().get_issues():
-        state_icon = u'\U0001F3C3'
+        state_icon = u':shit:'
         if issue.state == 'open':
             state = color_field('state_open', state_icon)
         elif issue.state == 'closed':
@@ -22,8 +23,8 @@ def my_issues(*args, **kwagrs):
         repos = color_field('repos', issue.repository.full_name)
         title = color_field('title', issue.title)
         if int(issue.comments) > 0:
-            comments = color_field('comments',
-                                '{} {}'.format(u'\U0001F4AC', issue.comments))
+            comments = ':speech_balloon: {}'.format(issue.comments)
+            comments = color_field('comments', comments)
         else:
             comments = ''
         number = color_field('number', '#{}'.format(issue.number))
@@ -41,9 +42,9 @@ def my_issues(*args, **kwagrs):
         template = ('{state} {repos} {title} {labels}  {comments}\n'
                     '  {number} opened {created} by {user}')
         info = template.format(state=state, repos=repos, title=title,
-                                comments=comments, number=number,
-                                created=created, user=user, labels=labels)
-        print(info, '\n')
+                               comments=comments, number=number,
+                               created=created, user=user, labels=labels)
+        print(emoji.emojize(info), '\n')
 
 def view_issue(data: str, *args, **kwargs):
     try:
@@ -84,7 +85,7 @@ def view_list_issues(username: str, repos: str):
         g = c.get('GITHUB')
         issues = g.get_user(username).get_repo(repos).get_issues()
         for issue in issues:
-            state_icon = u'\U0001F3C3'
+            state_icon = u':shit:'
             if issue.state == 'open':
                 state = color_field('state_open', state_icon)
             elif issue.state == 'closed':
@@ -94,15 +95,15 @@ def view_list_issues(username: str, repos: str):
 
             title = color_field('title', issue.title)
             if int(issue.comments) > 0:
-                comments = color_field('comments',
-                                    '{} {}'.format(u'\U0001F4AC', issue.comments))
+                comments = ':speech_balloon: {}'.format(issue.comments)
+                comments = color_field('comments', comments)
             else:
                 comments = ''
             number = color_field('number', '#{}'.format(issue.number))
             created = color_field('created', issue.created_at)
             user = color_field('user', issue.user.login)
             if issue.assignee:
-                assignee = '{} {}'.format(u'\U0001F647', issue.assignee.login)
+                assignee = ':bow: {}'.format(issue.assignee.login)
                 assignee = color_field('assignee', assignee)
             else:
                 assignee = ''
@@ -118,10 +119,10 @@ def view_list_issues(username: str, repos: str):
             template = ('{state} {title} {labels}  {assignee}  {comments}\n'
                         '  {number} opened {created} by {user}')
             info = template.format(state=state, title=title, labels=labels,
-                                    comments=comments, number=number,
-                                    created=created, user=user,
-                                    assignee=assignee)
-            print(info, '\n')
+                                   comments=comments, number=number,
+                                   created=created, user=user,
+                                   assignee=assignee)
+            print(emoji.emojize(info), '\n')
     except KeyError as err:
         print(err)
     except UnknownObjectException:

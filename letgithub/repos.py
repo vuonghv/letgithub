@@ -2,6 +2,7 @@ from github import UnknownObjectException
 from config import config
 from utils import perr, align_text
 from colors import red, color
+import emoji
 
 LEFT_MARGIN = 2
 MAX_WIDTH = 100
@@ -25,13 +26,13 @@ def view_list_repos(username: str):
             name = repo.name
             name = _color_field('name', name)
 
-            desc = repo.description if repo.description else ''
+            desc = 'Description: {}'.format(repo.description) if repo.description else ''
             desc = _color_field('description', desc) if desc else ''
 
-            stars = '{} {}'.format(u'\U00002B50', repo.stargazers_count)
+            stars = ':star: {}'.format(repo.stargazers_count)
             stars = _color_field('stargazers_count', stars)
 
-            forks = '{} {}'.format(u'\U0001F433', repo.forks_count)
+            forks = ':whale: {}'.format(repo.forks_count)
             forks = _color_field('forks_count', forks)
 
             upd_at = repo.updated_at
@@ -40,7 +41,7 @@ def view_list_repos(username: str):
             parent = repo.parent.full_name if repo.parent else ''
             parent = _color_field('parent', parent) if parent else ''
  
-            template = ('{name}  ({stars_count}  {forks_count})\n',
+            template = ('{name}  {stars_count}  {forks_count}\n',
                         'forked from {parent}\n' if parent else '{parent}',
                         '{description}\n' if desc else '{description}',
                         'Updated on {updated_at}',)
@@ -49,7 +50,7 @@ def view_list_repos(username: str):
                                     forks_count=forks, parent=parent,
                                     description=desc, updated_at=upd_at)
             info = align_text(info, LEFT_MARGIN, MAX_WIDTH)
-            print(info, '\n')
+            print(emoji.emojize(info), '\n')
     except UnknownObjectException as err:
         perr(red(err))
 

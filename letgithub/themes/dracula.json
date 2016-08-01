@@ -19,10 +19,10 @@
         "state_open": 118,
         "state_closed": 1,
         "title": 70,
-        "comments": 106,
+        "comments": 172,
         "body": 221,
-        "user": 151,
-        "assignee": 114,
+        "user": 100,
+        "assignee": 215,
         "created": 242,
         "repos": 242
     },
